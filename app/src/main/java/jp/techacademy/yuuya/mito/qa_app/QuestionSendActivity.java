@@ -50,7 +50,7 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
 
         mProgress = new ProgressDialog(this);
         mProgress.setMessage("投稿中・・・");
-        
+
     }
 
 }
