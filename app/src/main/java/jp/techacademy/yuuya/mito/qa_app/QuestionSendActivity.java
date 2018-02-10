@@ -1,6 +1,7 @@
 package jp.techacademy.yuuya.mito.qa_app;
 
 import android.app.ProgressDialog;
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -106,7 +107,7 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
 
 
             //取得したBitmapの長辺を500ピクセルにリサイズする
-            int imageWidth = mImageView.getWidth();
+            int imageWidth = image.getWidth();
             int imageHeight = image.getHeight();
             float scale = Math.min((float)500 / imageWidth, (float)500 / imageHeight);//(1)
 
@@ -195,7 +196,7 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onRequestPermissionResult(int requestCode, String permissions[], int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
         switch (requestCode){
             case PERMISSIONS_REQUEST_CODE:{
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -243,8 +244,5 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-
-
-    }
 
 }
