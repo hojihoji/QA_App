@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
                 mQuestionArrayList.clear();
-                mAdapter.setmQuestionArrayList(mQuestionArrayList);
+                mAdapter.setQuestionArrayList(mQuestionArrayList);
                 mListView.setAdapter(mAdapter);
 
                 //選択したジャンルにリスナーを登録する
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 //Questionのインスタンスを渡して質問詳細画面を起動する
-                Intent intent = new Intent(getApplicationContext(), QuestionDetailListAdapter.class);
+                Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
                 intent.putExtra("question", mQuestionArrayList.get(position));
                 startActivity(intent);
             }

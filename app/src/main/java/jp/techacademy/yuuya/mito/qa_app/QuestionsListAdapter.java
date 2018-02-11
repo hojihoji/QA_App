@@ -66,7 +66,7 @@ public class QuestionsListAdapter extends BaseAdapter {
 
     }
 
-    public void setmQuestionArrayList(ArrayList<Question> questionArrayList){
+    public void setQuestionArrayList(ArrayList<Question> questionArrayList){
         mQuestionArrayList = questionArrayList;
     }
 }

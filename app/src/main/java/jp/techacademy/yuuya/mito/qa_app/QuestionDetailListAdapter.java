@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.BreakIterator;
 
 /**
  * Created by Yuya on 2018/02/11.
