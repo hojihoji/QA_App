@@ -3,11 +3,12 @@ package jp.techacademy.yuuya.mito.qa_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -23,6 +24,9 @@ import java.util.HashMap;
  */
 
 public class QuestionDetailActivity extends AppCompatActivity {
+
+    private int favoriteStatus;//課題追記
+    private FloatingActionButton favoriteFab;//課題追記
 
     private ListView mListView;
     private Question mQuestion;
@@ -86,6 +90,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         setTitle(mQuestion.getTitle());
 
+
+
         //ListViewの準備
         mListView = (ListView) findViewById(R.id.listView);
         mAdapter = new QuestionDetailListAdapter(this, mQuestion);
@@ -112,6 +118,28 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
             }
         });
+
+        //課題追記
+        favoriteFab = (FloatingActionButton) findViewById(R.id.favoriteFab);
+        favoriteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(favoriteStatus == 0 ){
+                    //お気に入り状態でないのでお気に入りにする
+                    favoriteStatus = 1;
+                    favoriteFab.setImageResource(R.drawable.favorite);
+                    Snackbar.make(v, "お気に入りに追加しました", Snackbar.LENGTH_LONG).show();
+
+                }else {
+                    //お気に入り状態なのでお気に入りから外す
+                    favoriteStatus = 0;
+                    favoriteFab.setImageResource(R.drawable.notfavorite);
+                    Snackbar.make(v, "お気に入りから削除しました", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         mAnswerRef = databaseReference.child(Const.ContentsPATH).child(String.valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid()).child(Const.AnswersPATH);

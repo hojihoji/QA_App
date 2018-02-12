@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private int mGenre = 0;
+    private int mFavorite = 0;
 
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mGenreRef;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Question question = new Question(title, body, name, uid, dataSnapshot.getKey(), mGenre, bytes, answerArrayList);
+            Question question = new Question(title, body, name, uid, dataSnapshot.getKey(), mGenre, mFavorite, bytes, answerArrayList);//追記
             mQuestionArrayList.add(question);
             mAdapter.notifyDataSetChanged();
 

@@ -61,7 +61,7 @@ public class Question implements Serializable{
         mUid = uid;
         mQuestionUid = questionUid;
         mGenre = genre;
-        mFavorite = favorite;
+        mFavorite = favorite; //追記
         mBitmapArray = bytes.clone();
         mAnswerArrayList = answers;
 
