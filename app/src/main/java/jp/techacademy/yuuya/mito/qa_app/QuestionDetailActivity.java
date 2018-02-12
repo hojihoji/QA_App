@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Yuya on 2018/02/11.
@@ -38,6 +39,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private QuestionDetailListAdapter mAdapter;
 
     private DatabaseReference mAnswerRef;
+    private DatabaseReference mQuid; //追記
 
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
@@ -154,14 +156,22 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     favoriteFab.setImageResource(R.drawable.favorite);
 
                     //ここに追記する
-                    //Question quid = new Question();
-                    //quid = mQuestionUid
+                    //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    //mQuid = databaseReference.child(mQuestion.getQuestionUid());
+                    //Map<String, String> data = new HashMap<String, String>();
+                    //String quid = mQuid.toString();
+                   //data.put("quid", quid);
+                    //databaseReference.setValue(data);
+
+                    //favoriteStatus = quid;
+
 
                     Snackbar.make(v, "お気に入りに追加しました", Snackbar.LENGTH_LONG).show();
 
                 }else {
                     //お気に入り状態なのでお気に入りから外す
                     favoriteStatus = 0;
+                    //favoriteStatus = null;
                     favoriteFab.setImageResource(R.drawable.notfavorite);
                     Snackbar.make(v, "お気に入りから削除しました", Snackbar.LENGTH_LONG).show();
                 }
