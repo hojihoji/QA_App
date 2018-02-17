@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class QuestionDetailActivity extends AppCompatActivity {
 
-    private int favoriteStatus;//課題追記
+    //private int favoriteStatus ;//課題追記
     private FloatingActionButton favoriteFab;//課題追記
 
     private ListView mListView;
@@ -39,7 +39,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private QuestionDetailListAdapter mAdapter;
 
     private DatabaseReference mAnswerRef;
-    private DatabaseReference mQuid; //追記
+    boolean mFavoriteFlag = false;
 
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
@@ -58,6 +58,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
             String body = (String) map.get("body");
             String name = (String) map.get("name");
             String uid = (String) map.get("uid");
+
+
 
             Answer answer = new Answer(body, name, uid, answerUid);
             mQuestion.getAnswers().add(answer);
@@ -141,7 +143,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         //課題追記
         favoriteFab = (FloatingActionButton) findViewById(R.id.favoriteFab);
         //ログインしていなければfavoriteFabを表示しない
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             favoriteFab.setVisibility(View.INVISIBLE);
         }else{
@@ -150,18 +152,17 @@ public class QuestionDetailActivity extends AppCompatActivity {
         favoriteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(favoriteStatus == 0 ){
+                if(mFavoriteFlag == false){
                     //お気に入り状態でないのでお気に入りにする
-                    favoriteStatus = 1;
+                    //favoriteStatus = 1;
                     favoriteFab.setImageResource(R.drawable.favorite);
-
                     //ここに追記する
-                    //DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                    //mQuid = databaseReference.child(mQuestion.getQuestionUid());
-                    //Map<String, String> data = new HashMap<String, String>();
-                    //String quid = mQuid.toString();
-                   //data.put("quid", quid);
-                    //databaseReference.setValue(data);
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference favoriteRef = databaseReference.child(Const.favoritePATH).child(user.getUid()).child(String.valueOf(mQuestion.getQuestionUid()));
+                    Map<String, String> data = new HashMap<String, String>();
+                    String favoriteUid = mQuestion.getQuestionUid().toString();
+                    data.put("quid", favoriteUid);
+                    favoriteRef.setValue(data);
 
                     //favoriteStatus = quid;
 
@@ -170,11 +171,17 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                 }else {
                     //お気に入り状態なのでお気に入りから外す
-                    favoriteStatus = 0;
+                    //favoriteStatus = 0;
                     //favoriteStatus = null;
                     favoriteFab.setImageResource(R.drawable.notfavorite);
+
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    DatabaseReference favoriteRef = databaseReference.child(Const.favoritePATH).child(user.getUid()).child(String.valueOf(mQuestion.getQuestionUid()));
+                    favoriteRef.setValue(null);
+
                     Snackbar.make(v, "お気に入りから削除しました", Snackbar.LENGTH_LONG).show();
                 }
+                mFavoriteFlag = !mFavoriteFlag;
             }
         });
 

@@ -149,7 +149,7 @@ public class QuestionSendActivity extends AppCompatActivity implements View.OnCl
 
             Map<String, String> data = new HashMap<String, String>();
 
-            //UID
+            //UIDa
             data.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
             //タイトルと本文を取得する
