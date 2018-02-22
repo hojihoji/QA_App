@@ -39,7 +39,37 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private QuestionDetailListAdapter mAdapter;
 
     private DatabaseReference mAnswerRef;
+    private DatabaseReference mDatabaseReference;//課題追記
+
     boolean mFavoriteFlag = false;
+
+    private ChildEventListener mFavoriteListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            mFavoriteFlag = true;
+            favoriteFab.setImageResource(R.drawable.favorite);
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
@@ -69,6 +99,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
 
         }
 
@@ -148,13 +179,18 @@ public class QuestionDetailActivity extends AppCompatActivity {
             favoriteFab.setVisibility(View.INVISIBLE);
         }else{
             favoriteFab.setVisibility(View.VISIBLE);
+            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference userRef = mDatabaseReference.child(Const.favoritePATH).child(user.getUid()).child(mQuestion.getQuestionUid());
+            userRef.addChildEventListener(mFavoriteListener);
         }
+
+
+
         favoriteFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mFavoriteFlag == false){
                     //お気に入り状態でないのでお気に入りにする
-                    //favoriteStatus = 1;
                     favoriteFab.setImageResource(R.drawable.favorite);
                     //ここに追記する
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -164,15 +200,10 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     data.put("quid", favoriteUid);
                     favoriteRef.setValue(data);
 
-                    //favoriteStatus = quid;
-
-
                     Snackbar.make(v, "お気に入りに追加しました", Snackbar.LENGTH_LONG).show();
 
                 }else {
                     //お気に入り状態なのでお気に入りから外す
-                    //favoriteStatus = 0;
-                    //favoriteStatus = null;
                     favoriteFab.setImageResource(R.drawable.notfavorite);
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
