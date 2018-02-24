@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mGenreRef;
+    private DatabaseReference mFavoriteRef;
     private ListView mListView;
     private ArrayList<Question> mQuestionArrayList;
     private QuestionsListAdapter mAdapter;
@@ -156,7 +157,16 @@ public class MainActivity extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem favoriteItem = menu.findItem(R.id.nav_favorite);
+        favoriteItem.setVisible(false);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            favoriteItem.setVisible(true);
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -174,22 +184,29 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_compter) {
                     mToolbar.setTitle("コンピューター");
                     mGenre = 4;
+                }else if(id == R.id.nav_favorite){
+                    mToolbar.setTitle("お気に入り");
+                    mGenre = 5;
                 }
 
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
+                if(mGenre < 5) {
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
 
-                //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
-                mQuestionArrayList.clear();
-                mAdapter.setQuestionArrayList(mQuestionArrayList);
-                mListView.setAdapter(mAdapter);
+                    //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
+                    mQuestionArrayList.clear();
+                    mAdapter.setQuestionArrayList(mQuestionArrayList);
+                    mListView.setAdapter(mAdapter);
 
-                //選択したジャンルにリスナーを登録する
-                if(mGenreRef !=  null){
-                    mGenreRef.removeEventListener(mEventListener);
+                    //選択したジャンルにリスナーを登録する
+                    if (mGenreRef != null) {
+                        mGenreRef.removeEventListener(mEventListener);
+                    }
+                    mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+                    mGenreRef.addChildEventListener(mEventListener);
+                }else{
+
                 }
-                mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
-                mGenreRef.addChildEventListener(mEventListener);
 
                 return true;
             }

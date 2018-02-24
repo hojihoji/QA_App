@@ -39,7 +39,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private QuestionDetailListAdapter mAdapter;
 
     private DatabaseReference mAnswerRef;
-    private DatabaseReference mDatabaseReference;//課題追記
+    //private DatabaseReference mDatabaseReference;//課題追記
 
     boolean mFavoriteFlag = false;
 
@@ -179,8 +179,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
             favoriteFab.setVisibility(View.INVISIBLE);
         }else{
             favoriteFab.setVisibility(View.VISIBLE);
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference userRef = mDatabaseReference.child(Const.favoritePATH).child(user.getUid()).child(mQuestion.getQuestionUid());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference userRef = databaseReference.child(Const.favoritePATH).child(user.getUid()).child(mQuestion.getQuestionUid());
             userRef.addChildEventListener(mFavoriteListener);
         }
 
