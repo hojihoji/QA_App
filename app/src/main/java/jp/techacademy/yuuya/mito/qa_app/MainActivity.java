@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         Menu menu = navigationView.getMenu();
         MenuItem favoriteItem = menu.findItem(R.id.nav_favorite);
         favoriteItem.setVisible(false);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user != null){
             favoriteItem.setVisible(true);
         }
@@ -205,7 +206,9 @@ public class MainActivity extends AppCompatActivity {
                     mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
                     mGenreRef.addChildEventListener(mEventListener);
                 }else{
-
+                    // FavoriteActivityに遷移する
+                    Intent intent = new Intent(getApplicationContext(),FavoriteActivity.class);
+                    startActivity(intent);
                 }
 
                 return true;
