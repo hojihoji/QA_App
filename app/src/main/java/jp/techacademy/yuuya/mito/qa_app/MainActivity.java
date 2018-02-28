@@ -186,30 +186,30 @@ public class MainActivity extends AppCompatActivity {
                     mToolbar.setTitle("コンピューター");
                     mGenre = 4;
                 }else if(id == R.id.nav_favorite){
-                    mToolbar.setTitle("お気に入り");
-                    mGenre = 5;
-                }
+                mToolbar.setTitle("お気に入り");
+                mGenre = 5;
+            }
 
                 if(mGenre < 5) {
-                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                    drawer.closeDrawer(GravityCompat.START);
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
 
-                    //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
-                    mQuestionArrayList.clear();
-                    mAdapter.setQuestionArrayList(mQuestionArrayList);
-                    mListView.setAdapter(mAdapter);
+                //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
+                mQuestionArrayList.clear();
+                mAdapter.setQuestionArrayList(mQuestionArrayList);
+                mListView.setAdapter(mAdapter);
 
-                    //選択したジャンルにリスナーを登録する
-                    if (mGenreRef != null) {
-                        mGenreRef.removeEventListener(mEventListener);
-                    }
-                    mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
-                    mGenreRef.addChildEventListener(mEventListener);
-                }else{
-                    // FavoriteActivityに遷移する
-                    Intent intent = new Intent(getApplicationContext(),FavoriteActivity.class);
-                    startActivity(intent);
+                //選択したジャンルにリスナーを登録する
+                if (mGenreRef != null) {
+                    mGenreRef.removeEventListener(mEventListener);
                 }
+                mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+                mGenreRef.addChildEventListener(mEventListener);
+            }else{
+                // FavoriteActivityに遷移する
+                Intent intent = new Intent(getApplicationContext(),FavoriteActivity.class);
+                startActivity(intent);
+            }
 
                 return true;
             }

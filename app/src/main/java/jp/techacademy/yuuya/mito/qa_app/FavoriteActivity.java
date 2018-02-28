@@ -126,11 +126,10 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
 
-        //ListViewの準備
-        mListView = (ListView) findViewById(R.id.listView);
-        mAdapter = new QuestionsListAdapter(this);
-        mQuestionArrayList = new ArrayList<Question>();
-        mAdapter.notifyDataSetChanged();
+        //質問のリクエストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットしなおす
+        mQuestionArrayList.clear();
+        mAdapter.setQuestionArrayList(mQuestionArrayList);
+        mListView.setAdapter(mAdapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -138,18 +137,21 @@ public class FavoriteActivity extends AppCompatActivity {
         DatabaseReference favoriteRef = databaseReference.child(Const.favoritePATH).child(user.getUid());
         favoriteRef.addChildEventListener(mFavoriteListener);
 
-        for(int genre = 0; genre < 5; genre++) {
+        for(int i = 0; i < 4; i++) {
+            int genre = 0;
+            ++genre;
             DatabaseReference mDatabaseReference = databaseReference.child(Const.ContentsPATH).child(String.valueOf(genre));
             mDatabaseReference.addChildEventListener(mChildEventListener);
         }
 
-        //AdapterをListViewにセットしなおす
-        mQuestionArrayList.clear();
-        mAdapter.setQuestionArrayList(mQuestionArrayList);
-        mListView.setAdapter(mAdapter);
+        //ListViewの準備
+        mListView = (ListView) findViewById(R.id.listView);
+        mAdapter = new QuestionsListAdapter(this);
+        mQuestionArrayList = new ArrayList<Question>();
+        mAdapter.notifyDataSetChanged();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-           @Override
+            @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 //Questionのインスタンスを渡して質問詳細画面を起動する
                 Intent intent = new Intent(getApplicationContext(), QuestionDetailActivity.class);
@@ -157,5 +159,6 @@ public class FavoriteActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 }
