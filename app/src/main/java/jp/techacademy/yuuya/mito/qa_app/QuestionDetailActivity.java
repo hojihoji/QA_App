@@ -197,7 +197,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     DatabaseReference favoriteRef = databaseReference.child(Const.favoritePATH).child(user.getUid()).child(String.valueOf(mQuestion.getQuestionUid()));
                     Map<String, String> data = new HashMap<String, String>();
                     String favoriteUid = mQuestion.getQuestionUid().toString();
-                    data.put("quid", favoriteUid);
+                    data.put("genre", String.valueOf(mQuestion.getGenre()));
                     favoriteRef.setValue(data);
 
                     Snackbar.make(v, "お気に入りに追加しました", Snackbar.LENGTH_LONG).show();

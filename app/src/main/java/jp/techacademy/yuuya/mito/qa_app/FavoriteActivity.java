@@ -29,6 +29,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private DatabaseReference mFavoriteRef;
     private ArrayList<String> mFavoriteArrayList;
     private ArrayList<Question>mQuestionArrayList;
+    private HashMap<String,String>mHashMap;
 
 
     private ChildEventListener mFavoriteListener = new ChildEventListener() {
@@ -36,9 +37,8 @@ public class FavoriteActivity extends AppCompatActivity {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             HashMap map = (HashMap)dataSnapshot.getValue();
 
-            String favorite = (String) map.get("quid");
-            String fav = new String(favorite);
-            mFavoriteArrayList.add(fav);
+            String genre = (String) map.get("genre");
+            mHashMap.put(dataSnapshot.getKey(),genre);
 
         }
 
@@ -96,8 +96,8 @@ public class FavoriteActivity extends AppCompatActivity {
                     }
                 }
 
-                if (mFavoriteArrayList.contains(dataSnapshot.getKey())) {
-                    Question favQuestion = new Question(title, body, name, uid, dataSnapshot.getKey(), mGenre, bytes, answerArrayList);//追記
+                if (mHashMap.containsKey(dataSnapshot.getKey())) {
+                    Question favQuestion = new Question(title, body, name, uid, dataSnapshot.getKey(), Integer.valueOf(mHashMap.get(dataSnapshot.getKey())), bytes, answerArrayList);//追記
                     mQuestionArrayList.add(favQuestion);
                     mAdapter.notifyDataSetChanged();
 
@@ -135,8 +135,10 @@ public class FavoriteActivity extends AppCompatActivity {
         //ListViewの準備
         mListView = (ListView) findViewById(R.id.listView);
         mAdapter = new QuestionsListAdapter(this);
-        mFavoriteArrayList = new ArrayList<String>();
+        mHashMap = new HashMap<>();
         mQuestionArrayList = new ArrayList<Question>();
+        mAdapter.setQuestionArrayList(mQuestionArrayList);
+        mListView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
 
@@ -147,9 +149,7 @@ public class FavoriteActivity extends AppCompatActivity {
         mFavoriteRef.addChildEventListener(mFavoriteListener);
 
         for(int i = 0; i < 4; i++) {
-            mGenre = 0;
-            ++mGenre;
-            DatabaseReference genreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+            DatabaseReference genreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(i));
             genreRef.addChildEventListener(mChildEventListener);
         }
 
