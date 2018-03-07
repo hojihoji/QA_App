@@ -184,6 +184,21 @@ public class QuestionDetailActivity extends AppCompatActivity {
             userRef.addChildEventListener(mFavoriteListener);
         }
 
+        //課題追記お気に入りボタンの初期設定
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference favoriteRef = databaseReference1.child(Const.favoritePATH).child(user.getUid()).child(String.valueOf(mQuestion.getQuestionUid()));
+        String favoriteUid = mQuestion.getQuestionUid().toString();
+        DatabaseReference questionRef = databaseReference1.child(Const.ContentsPATH).child(String.valueOf(mQuestion.getGenre())).child(mQuestion.getQuestionUid());
+        String questionUid = mQuestion.getQuestionUid().toString();
+        if(favoriteRef.equals(questionUid)){
+            favoriteFab.setImageResource(R.drawable.favorite);
+            mFavoriteFlag = true;
+        }else{
+            favoriteFab.setImageResource(R.drawable.notfavorite);
+            mFavoriteFlag = false;
+        }
+
+
 
 
         favoriteFab.setOnClickListener(new View.OnClickListener() {
